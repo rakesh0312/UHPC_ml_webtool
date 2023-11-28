@@ -1,0 +1,197 @@
+import pandas as pd 
+import numpy as np 
+import pickle
+import tkinter as tk
+import pickleshare
+from sklearn.ensemble import RandomForestRegressor
+# Load the Random Forest model
+#file_name = "rf_final.pkl"
+#rf_model_loaded = pickle.load(open(file_name, "rb"))
+
+# Load the model from the pickle file
+with open("rf_uhpc.pkl", "rb") as file:
+    rfr_loaded = pickle.load(file)
+# tkinter GUI
+root = tk.Tk() 
+root.title("Prediction of compressive strength of UHPC")
+
+canvas1 = tk.Canvas(root, width=550, height=500)
+canvas1.configure(background='#e9ecef')
+canvas1.pack()
+
+# ... (rest of the GUI code)
+#adding a label to the root window
+label0 = tk.Label(root, text='Developed by Er. Rakesh Kumar*',font=('Futura Md Bt', 13, 'bold'),bg='#e9ecef')
+canvas1.create_window(20, 20, anchor="w", window=label0)
+label_phd = tk.Label(root, text='*NIT Patna',font=('Futura Md Bt',12),bg='#e9ecef')
+canvas1.create_window(20, 50, anchor="w",window=label_phd)
+label_city = tk.Label(root, text='India',font=('Futura Md Bt',12),bg='#e9ecef')
+canvas1.create_window(20, 80, anchor="w",window=label_city)
+label_mail = tk.Label(root, text='Email: rakeshk.ph21.ce@nitp.ac.in',font=('Futura Md Bt',12),bg='#e9ecef')
+canvas1.create_window(20, 110, anchor="w",window=label_mail)
+
+
+label_input = tk.Label(root, text='Input Parameters',font=('Futura Md Bt',12,'bold','italic','underline'),bg='#e9ecef')
+canvas1.create_window(20, 140, anchor="w",window=label_input)
+
+# New_Normal_Stress label and input box
+label1 = tk.Label(root, text='SF, kg/m³ : ',font=('Futura Md Bt',12),bg='#e9ecef')
+canvas1.create_window(20, 170, anchor="w",window=label1)
+
+entry1 = tk.Entry (root) # create 1st entry box
+canvas1.create_window(480, 170, window=entry1)
+
+# New_D50 label and input box
+label2 = tk.Label(root, text='GGBS, kg/m³ : ',font=('Futura Md Bt',12),bg='#e9ecef')
+canvas1.create_window(20, 200, anchor="w",window=label2)
+
+entry2 = tk.Entry (root) # create 2nd entry box
+canvas1.create_window(480, 200, window=entry2)
+
+# New_FC label and input box
+label3 = tk.Label(root, text='Cement, kg/m³ : ',font=('Futura Md Bt',12),bg='#e9ecef')
+canvas1.create_window(20, 230, anchor="w",window=label3)
+
+entry3 = tk.Entry (root) # create 3rd entry box
+canvas1.create_window(480, 230, window=entry3)
+
+# New_Length of geogrid label and input box
+label4 = tk.Label(root, text='SP, kg/m³ : ',font=('Futura Md Bt',12),bg='#e9ecef')
+canvas1.create_window(20, 260, anchor="w",window=label4)
+
+entry4 = tk.Entry (root) # create 4th entry box
+canvas1.create_window(480, 260, window=entry4)
+
+# New_Spacing between geogrid longitudinal members label and input box
+label5 = tk.Label(root, text='CA, kg/m³ : ',font=('Futura Md Bt',12),bg='#e9ecef')
+canvas1.create_window(20, 290, anchor="w",window=label5)
+
+entry5 = tk.Entry (root) # create 5th entry box
+canvas1.create_window(480, 290, window=entry5)
+
+# New_Spacing between geogrid transverse members label and input box
+label6 = tk.Label(root, text='FA, kg/m³ : ',font=('Futura Md Bt',12),bg='#e9ecef')
+canvas1.create_window(20, 320, anchor="w",window=label6)
+
+entry6 = tk.Entry (root) # create 6th entry box
+canvas1.create_window(480, 320, window=entry6)
+
+# New_Ultimate Tensile Strength of Geogrid label and input box
+label7 = tk.Label(root, text='T, °C : ',font=('Futura Md Bt',12),bg='#e9ecef')
+canvas1.create_window(20, 350, anchor="w",window=label7)
+
+entry7 = tk.Entry (root) # create 7th entry box
+canvas1.create_window(480, 350, window=entry7)
+
+# New_Ultimate Tensile Strength of Geogrid label and input box
+label8 = tk.Label(root, text='Age, days : ',font=('Futura Md Bt',12),bg='#e9ecef')
+canvas1.create_window(20, 380, anchor="w",window=label8)
+
+entry8 = tk.Entry (root) # create 7th entry box
+canvas1.create_window(480, 380, window=entry8)
+
+label0000 = tk.Label(root, text='Output',font=('Futura Md Bt',12,'bold','italic','underline'),bg='#e9ecef')
+canvas1.create_window(20, 410, anchor="w",window=label0000)
+
+label_out = tk.Label(root, text='Compressive strength, MPa',font=('Futura Md Bt',12),bg='#e9ecef')
+canvas1.create_window(20, 460, anchor="w",window=label_out)
+
+#entry_out = tk.Entry (root) # create box for output
+#canvas1.create_window(480, 450, window=entry_out)
+
+def values(): 
+    global New_SF # our 1st input variable
+    New_SF = float(entry1.get())  
+    
+    global New_GGBS # our 2nd input variable
+    New_GGBS = float(entry2.get())
+
+    global New_Cement # our 3rd input variable
+    New_Cement = float(entry3.get()) 
+
+    global New_SP # our 4th input variable
+    New_SP = float(entry4.get()) 
+
+    global New_CA # our 5th input variable
+    New_CA = float(entry5.get()) 
+
+    global New_FA # our 6th input variable
+    New_FA = float(entry6.get()) 
+
+    global New_T # our 7th input variable
+    New_T = float(entry7.get()) 
+    
+    global New_Age # our 8th input variable
+    New_Age = float(entry8.get()) 
+    
+    import pandas as pd
+import numpy as np
+import pickle
+import tkinter as tk
+from tkinter import messagebox
+
+# ... (rest of the code)
+
+def values(): 
+    # Validate and get the values from the entry boxes
+    input_values = []
+    entry_boxes = [entry1, entry2, entry3, entry4, entry5, entry6, entry7,entry8]
+
+    for entry_box in entry_boxes:
+        value = entry_box.get().strip()
+        if value:
+            try:
+                input_values.append(float(value))
+            except ValueError:
+                # If the value is not a valid float, show an error message or handle it as you prefer
+                messagebox.showerror("Error", "Invalid input. Please enter valid numeric values.")
+                return
+        else:
+            # If any entry box is empty, show an error message or handle it as you prefer
+            messagebox.showerror("Error", "Please fill in all the input fields.")
+            return
+
+    # If all input values are valid, proceed with prediction
+    DataFrame = pd.read_excel("F:\Project\matlab\Fem_data_7.xlsx", header=[0])
+    data = np.array([input_values])
+    Input_data = pd.DataFrame(data, columns=['SF', 'GGBS', 'Cement', 'SP', 'CA', 'FA', 'T','Age'])
+
+    # Predict using the loaded Random Forest model
+    Prediction_result = np.around(rfr_loaded.predict(Input_data), 2)
+
+    # Display the prediction on the GUI
+    label_Prediction = tk.Label(root, text=str(Prediction_result).lstrip('[').rstrip(']'), bg='white')
+    canvas1.create_window(450, 450, anchor="w", window=label_Prediction)
+
+# ... (rest of the code)
+
+    # If all input values are valid, proceed with prediction
+    DataFrame = pd.read_excel("F:/Project/matlab/UHPC_SHUBHUM_DATA.xlsx", header=[0])
+    data = np.array([input_values])
+    Input_data = pd.DataFrame(data, columns=['SF', 'GGBS', 'Cement', 'SP', 'CA', 'FA', 'T','Age'])
+
+    # Predict using the loaded Random Forest model
+    Prediction_result = np.around(rfr_loaded.predict(Input_data), 2)
+
+    # Display the prediction on the GUI
+    label_Prediction = tk.Label(root, text=str(Prediction_result).lstrip('[').rstrip(']'), bg='white')
+    canvas1.create_window(450, 450, anchor="w", window=label_Prediction)
+
+    DataFrame = pd.read_excel("F:/Project/matlab/UHPC_SHUBHUM_DATA.xlsx",header = [0])
+    data = np.array([[New_SF, New_GGBS, New_Cement, New_SP, New_CA, New_FA, New_T,New_Age]])
+    Input_data = pd.DataFrame(data, columns=['SF', 'GGBS', 'Cement', 'SP', 'CA', 'FA', 'T','Age'])
+  
+    # Predict using the loaded Random Forest model
+    #y_pred = rfr_loaded.predict(X_new_data)
+    Prediction_result = np.around(rfr_loaded.predict(Input_data),2)
+    # Predict using the loaded Random Forest model
+    #Prediction_result = np.around(rfr_loaded.predict(Input_data), 2)
+
+    # Display the prediction on the GUI
+    label_Prediction = tk.Label(root, text=str(Prediction_result).lstrip('[').rstrip(']'), bg='white')
+    canvas1.create_window(450, 460, anchor="w", window=label_Prediction)
+
+# ... (rest of the GUI code)
+button1 = tk.Button (root, text= 'Predict',command=values, bg='white') # button to call the 'values' command above 
+canvas1.create_window(450, 420, anchor="w",window=button1)
+root.mainloop()
