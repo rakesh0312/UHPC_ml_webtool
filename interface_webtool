@@ -4,13 +4,6 @@ import pickle
 import tkinter as tk
 import pickleshare
 from sklearn.ensemble import RandomForestRegressor
-# Load the Random Forest model
-#file_name = "rf_final.pkl"
-#rf_model_loaded = pickle.load(open(file_name, "rb"))
-
-# Load the model from the pickle file
-with open("rf_uhpc.pkl", "rb") as file:
-    rfr_loaded = pickle.load(file)
 # tkinter GUI
 root = tk.Tk() 
 root.title("Prediction of compressive strength of UHPC")
